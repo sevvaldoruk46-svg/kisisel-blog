@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kişisel Blog</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #0f172a;
+      color: white;
+    }
+
+    header {
+      background: #020617;
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #1e293b;
+    }
+
+    nav button {
+      background: #1e293b;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      margin: 5px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    nav button:hover {
+      background: #334155;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .post {
+      background: #020617;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      border: 1px solid #1e293b;
+      position: relative;
+    }
+
+    .post h2 {
+      margin-bottom: 10px;
+      color: #38bdf8;
+    }
+
+    .post p {
+      color: #cbd5f5;
+      line-height: 1.6;
+    }
+
+    .delete-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #ef4444;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      color: white;
+      font-size: 12px;
+    }
+
+    .delete-btn:hover {
+      background: #dc2626;
+    }
+
+    .new-post {
+      background: #020617;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid #1e293b;
+      margin-bottom: 30px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+
+    textarea {
+      resize: none;
+      height: 100px;
+    }
+
+    .add-btn {
+      background: #38bdf8;
+      color: black;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      font-weight: bold;
+    }
+
+    .add-btn:hover {
+      background: #0ea5e9;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1> Benim Blogum</h1>
+  <nav>
+    <button onclick="filterPosts('all')">Tümü</button>
+    <button onclick="filterPosts('personal')">Kişisel</button>
+    <button onclick="filterPosts('tech')">Teknoloji</button>
+  </nav>
+</header>
+
+<div class="container">
+
+  <div class="new-post">
+    <h2>Yeni Yazı Ekle</h2>
+    <input type="text" id="title" placeholder="Başlık">
+    <textarea id="content" placeholder="İçerik"></textarea>
+    <select id="category">
+      <option value="personal">Kişisel</option>
+      <option value="tech">Teknoloji</option>
+    </select>
+    <button class="add-btn" onclick="addPost()">Yazıyı Yayınla</button>
+  </div>
+
+  <div id="posts"></div>
+
+</div>
+
+<footer>
+  © 2026 Kişisel Blog
+</footer>
+
+<script>
+  let posts = [
+    { id: 1, title: "İlk Yazım", content: "Bloguma hoş geldiniz", category: "personal" },
+    { id: 2, title: "JavaScript Notları", content: "JS gerçekten güçlü bir dil.", category: "tech" }
+  ];
+
+  function renderPosts(filteredPosts) {
+    const postsDiv = document.getElementById("posts");
+    postsDiv.innerHTML = "";
+
+    filteredPosts.forEach(post => {
+      postsDiv.innerHTML += `
+        <div class="post">
+          <button class="delete-btn" onclick="deletePost(${post.id})">Sil</button>
+          <h2>${post.title}</h2>
+          <p>${post.content}</p>
+        </div>
+      `;
+    });
+  }
+
+  function addPost() {
+    const title = document.getElementById("title").value;
+    const content = document.getElementById("content").value;
+    const category = document.getElementById("category").value;
+
+    if (title === "" || content === "") {
+      alert("Boş alan bırakma");
+      return;
+    }
+
+    posts.unshift({
+      id: Date.now(),
+      title,
+      content,
+      category
+    });
+
+    document.getElementById("title").value = "";
+    document.getElementById("content").value = "";
+
+    renderPosts(posts);
+  }
+
+  function deletePost(id) {
+    posts = posts.filter(post => post.id !== id);
+    renderPosts(posts);
+  }
+
+  function filterPosts(category) {
+    if (category === "all") {
+      renderPosts(posts);
+    } else {
+      const filtered = posts.filter(post => post.category === category);
+      renderPosts(filtered);
+    }
+  }
+
+  renderPosts(posts);
+</script>
+
+</body>
+</html>
